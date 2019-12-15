@@ -6,7 +6,7 @@ draft: true
 keywords: []
 description: ""
 tags: ["git"]
-categories: []
+categories: ["git"]
 author: ""
 
 # You can also close(false) or open(true) something for this content.

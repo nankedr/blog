@@ -1,5 +1,6 @@
 import rss from "@astrojs/rss";
 import { SITE } from "../consts";
+import { getPostUrl } from "../lib/posts";
 
 export async function GET(context) {
   const posts = Object.values(import.meta.glob("./posts/*.md", { eager: true }))
@@ -10,11 +11,13 @@ export async function GET(context) {
     title: SITE.title,
     description: SITE.description,
     site: context.site,
+    customData: "<language>zh-CN</language>",
     items: posts.map((post) => ({
       title: post.frontmatter.title,
       description: post.frontmatter.description,
       pubDate: post.frontmatter.pubDate,
-      link: post.url
+      link: getPostUrl(post),
+      categories: post.frontmatter.tags
     }))
   });
 }

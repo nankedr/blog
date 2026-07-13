@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import { formatDate, getTagSlug } from "../lib/posts";
+import { SITE } from "../consts";
 import type { MarkdownHeading } from "astro";
 
 const { frontmatter, headings = [] } = Astro.props as {
@@ -8,9 +9,36 @@ const { frontmatter, headings = [] } = Astro.props as {
   headings: MarkdownHeading[];
 };
 const toc = headings.filter(({ depth }) => depth === 2 || depth === 3);
+const publishedTime = new Date(frontmatter.pubDate).toISOString();
+const modifiedTime = new Date(frontmatter.updatedDate ?? frontmatter.pubDate).toISOString();
+const site = Astro.site ?? Astro.url.origin;
+const path = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const image = new URL(frontmatter.image ?? "/og-default.png", site).href;
+const structuredData = {
+  "@type": "BlogPosting",
+  headline: frontmatter.title,
+  description: frontmatter.description,
+  image,
+  datePublished: publishedTime,
+  dateModified: modifiedTime,
+  author: { "@type": "Person", name: SITE.author },
+  mainEntityOfPage: new URL(path, site).href,
+  keywords: frontmatter.tags ?? [],
+  inLanguage: "zh-CN"
+};
 ---
 
-<BaseLayout title={frontmatter.title} description={frontmatter.description} wide>
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  image={frontmatter.image}
+  type="article"
+  publishedTime={frontmatter.pubDate}
+  modifiedTime={frontmatter.updatedDate}
+  tags={frontmatter.tags}
+  structuredData={structuredData}
+  wide
+>
   <article class="article">
     <header class="article-header">
       <a class="back-link" href="/posts/">文章</a>
@@ -40,7 +68,7 @@ const toc = headings.filter(({ depth }) => depth === 2 || depth === 3);
       toc.length > 0 && (
         <aside class="toc-wrap" aria-label="文章目录">
           <details class="toc" open>
-            <summary>目录</summary>
+            <summary>目录 <span>{toc.length} 项</span></summary>
             <nav>
               {toc.map((heading) => (
                 <a class:list={{ sub: heading.depth === 3 }} href={`#${heading.slug}`}>
@@ -60,25 +88,71 @@ const toc = headings.filter(({ depth }) => depth === 2 || depth === 3);
 
 <script>
   const links = [...document.querySelectorAll<HTMLAnchorElement>(".toc a")];
+  const details = document.querySelector<HTMLDetailsElement>(".toc");
+  const nav = document.querySelector<HTMLElement>(".toc nav");
   const sections = links
     .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
     .filter((section): section is HTMLElement => section !== null);
 
+  if (details) {
+    const mobile = matchMedia("(max-width: 940px)");
+    const syncDetails = () => (details.open = !mobile.matches);
+    syncDetails();
+    mobile.addEventListener("change", syncDetails);
+  }
+
   if (sections.length) {
     const setActive = (id: string) => {
-      links.forEach((link) =>
-        link.toggleAttribute("aria-current", decodeURIComponent(link.hash.slice(1)) === id)
-      );
+      let active: HTMLAnchorElement | undefined;
+      links.forEach((link) => {
+        if (decodeURIComponent(link.hash.slice(1)) === id) {
+          link.setAttribute("aria-current", "location");
+          active = link;
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+
+      if (active && nav) {
+        const item = active.getBoundingClientRect();
+        const container = nav.getBoundingClientRect();
+        if (item.top < container.top) nav.scrollTop -= container.top - item.top;
+        if (item.bottom > container.bottom) nav.scrollTop += item.bottom - container.bottom;
+      }
     };
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting).at(-1);
-        if (visible) setActive(visible.target.id);
+
+    const updateActive = () => {
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) {
+        setActive(sections.at(-1)!.id);
+        return;
+      }
+
+      let current = sections[0];
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top > innerHeight * 0.2) break;
+        current = section;
+      }
+      setActive(current.id);
+    };
+
+    let frame = 0;
+    addEventListener(
+      "scroll",
+      () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(updateActive);
       },
-      { rootMargin: "-15% 0px -75%" }
+      { passive: true }
     );
-    sections.forEach((section) => observer.observe(section));
-    setActive(sections[0].id);
+    addEventListener("resize", updateActive);
+    addEventListener("hashchange", () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (sections.some((section) => section.id === id)) setActive(id);
+    });
+
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (sections.some((section) => section.id === id)) setActive(id);
+    else updateActive();
   }
 </script>
 
@@ -145,11 +219,6 @@ const toc = headings.filter(({ depth }) => depth === 2 || depth === 3);
     scroll-margin-top: 28px;
   }
 
-  .article-body :global(h1) {
-    margin-bottom: 24px;
-    font-size: clamp(1.85rem, 3vw, 2.35rem);
-  }
-
   .article-body :global(h2) {
     padding-bottom: 10px;
     border-bottom: 1px solid var(--line);
@@ -179,12 +248,35 @@ const toc = headings.filter(({ depth }) => depth === 2 || depth === 3);
   }
 
   .toc summary {
+    display: flex;
+    align-items: center;
+    gap: 7px;
     margin-bottom: 12px;
     color: var(--text);
     font-size: 0.82rem;
     font-weight: 700;
     letter-spacing: 0.12em;
     list-style: none;
+  }
+
+  .toc summary span {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .toc summary::after {
+    content: "−";
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .toc:not([open]) summary::after {
+    content: "+";
   }
 
   .toc summary::-webkit-details-marker {

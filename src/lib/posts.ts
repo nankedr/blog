@@ -23,20 +23,35 @@ export function formatDate(date: Date | string) {
   }).format(new Date(date));
 }
 
+export function getPostUrl(post: Post) {
+  return post.url.endsWith("/") ? post.url : `${post.url}/`;
+}
+
 export function getTagSlug(tag: string) {
-  return tag.trim().toLowerCase().replace(/\s+/g, "-");
+  const slug = tag
+    .normalize("NFKC")
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+    .replace(/^-+|-+$/g, "");
+
+  if (!slug) throw new Error(`标签无法生成 slug：${tag}`);
+  return slug;
 }
 
 export function getTags(posts: Post[]) {
-  const counts = new Map<string, number>();
+  const tags = new Map<string, { name: string; count: number }>();
 
   for (const post of posts) {
     for (const tag of post.frontmatter.tags ?? []) {
-      counts.set(tag, (counts.get(tag) ?? 0) + 1);
+      const slug = getTagSlug(tag);
+      const current = tags.get(slug);
+      tags.set(slug, { name: current?.name ?? tag, count: (current?.count ?? 0) + 1 });
     }
   }
 
-  return [...counts.entries()]
-    .map(([name, count]) => ({ name, count, slug: getTagSlug(name) }))
+  return [...tags.entries()]
+    .map(([slug, tag]) => ({ ...tag, slug }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }

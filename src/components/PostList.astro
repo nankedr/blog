@@ -1,5 +1,5 @@
 ---
-import { formatDate, getTagSlug, type Post } from "../lib/posts";
+import { formatDate, getPostUrl, getTagSlug, type Post } from "../lib/posts";
 
 type Props = {
   posts: Post[];
@@ -13,7 +13,7 @@ const { posts } = Astro.props;
     posts.map((post) => (
       <li>
         <div class="post-line">
-          <a class="post-title" href={post.url}>{post.frontmatter.title}</a>
+          <a class="post-title" href={getPostUrl(post)}>{post.frontmatter.title}</a>
           <time datetime={new Date(post.frontmatter.pubDate).toISOString()}>
             {formatDate(post.frontmatter.pubDate)}
           </time>

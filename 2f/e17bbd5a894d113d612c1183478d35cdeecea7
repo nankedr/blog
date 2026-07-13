@@ -1,0 +1,23 @@
+.gitignore
+  s_129783586faa1b::t_ab41e7d8de6634 1-5
+README.md
+  s_129783586faa1b::t_06e400ff5ff791 1-24,26-30,32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "2fe17bbd5a894d113d612c1183478d35cdeecea7",
+  "prompts": {},
+  "sessions": {
+    "s_129783586faa1b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f46d5-fba8-7740-b023-7d9721ede43f",
+        "model": "unknown"
+      },
+      "human_author": "zhaoke.3235889 <zhaoke.3235889@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}

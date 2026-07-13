@@ -28,7 +28,7 @@ const { tag, posts } = Astro.props;
 <BaseLayout title={`标签：${tag}`} description={`标签 ${tag} 下的文章。`}>
   <section>
     <p class="kicker">Tag</p>
-    <h1>{tag}</h1>
+    <h1 class="tag-title">{tag}</h1>
     <p class="lead">共 {posts.length} 篇文章。</p>
   </section>
 
@@ -36,3 +36,10 @@ const { tag, posts } = Astro.props;
     <PostList posts={posts} />
   </section>
 </BaseLayout>
+
+<style>
+  .tag-title {
+    overflow-wrap: anywhere;
+    font-size: clamp(1.85rem, 4vw, 2.4rem);
+  }
+</style>

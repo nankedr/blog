@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostList from "../components/PostList.astro";
+import { sortPosts, type Post } from "../lib/posts";
+import { SITE } from "../consts";
+
+const posts = sortPosts(Object.values(import.meta.glob("./posts/*.md", { eager: true })) as Post[]);
+---
+
+<BaseLayout>
+  <section>
+    <p class="kicker">学习笔记 / 技术分享</p>
+    <h1>记录正在理解的东西。</h1>
+    <p class="lead">
+      这里会放平时学习、实践和复盘时留下的笔记。文字优先，结构清楚，方便以后翻回来继续接上思路。
+    </p>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>最新文章</h2>
+      <a href="/posts/">全部文章</a>
+    </div>
+    <PostList posts={posts.slice(0, 5)} />
+  </section>
+
+  <section class="about-strip">
+    <h2>关于这个博客</h2>
+    <p class="muted">{SITE.description}</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head a {
+    color: var(--muted);
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+
+  .about-strip {
+    border-top: 1px solid var(--line);
+    margin-top: 64px;
+    padding-top: 8px;
+  }
+</style>

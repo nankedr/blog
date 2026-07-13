@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getTags, sortPosts, type Post } from "../../lib/posts";
+
+const posts = sortPosts(Object.values(import.meta.glob("../posts/*.md", { eager: true })) as Post[]);
+const tags = getTags(posts);
+---
+
+<BaseLayout title="标签" description="按标签浏览文章。">
+  <section>
+    <p class="kicker">Tags</p>
+    <h1>标签</h1>
+    <p class="lead">从主题进入文章，适合回看同一类笔记。</p>
+  </section>
+
+  <section class="tag-cloud" aria-label="标签列表">
+    {
+      tags.map((tag) => (
+        <a href={`/tags/${tag.slug}/`}>
+          <span>{tag.name}</span>
+          <em>{tag.count}</em>
+        </a>
+      ))
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 40px;
+  }
+
+  .tag-cloud a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 12px;
+    text-decoration: none;
+  }
+
+  em {
+    color: var(--muted);
+    font-size: 0.86rem;
+    font-style: normal;
+  }
+</style>

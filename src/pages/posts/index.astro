@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostList from "../../components/PostList.astro";
+import { sortPosts, type Post } from "../../lib/posts";
+
+const posts = sortPosts(Object.values(import.meta.glob("./*.md", { eager: true })) as Post[]);
+---
+
+<BaseLayout title="文章" description="全部学习笔记和分享。">
+  <section>
+    <p class="kicker">Posts</p>
+    <h1>文章</h1>
+    <p class="lead">所有笔记按发布时间倒序排列。</p>
+  </section>
+
+  <section>
+    <PostList posts={posts} />
+  </section>
+</BaseLayout>

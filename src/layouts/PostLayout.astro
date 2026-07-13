@@ -1,0 +1,82 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { formatDate, getTagSlug } from "../lib/posts";
+
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+  <article class="article">
+    <header class="article-header">
+      <a class="back-link" href="/posts/">文章</a>
+      <h1>{frontmatter.title}</h1>
+      <p class="lead">{frontmatter.description}</p>
+      <div class="article-meta">
+        <time datetime={new Date(frontmatter.pubDate).toISOString()}>
+          {formatDate(frontmatter.pubDate)}
+        </time>
+        {
+          frontmatter.updatedDate && (
+            <span>更新于 {formatDate(frontmatter.updatedDate)}</span>
+          )
+        }
+      </div>
+      {
+        frontmatter.tags?.length > 0 && (
+          <div class="tags" aria-label="文章标签">
+            {frontmatter.tags.map((tag: string) => (
+              <a href={`/tags/${getTagSlug(tag)}/`}>{tag}</a>
+            ))}
+          </div>
+        )
+      }
+    </header>
+    <div class="article-body">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-header {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 28px;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--muted);
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    margin: 20px 0 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .tags a {
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 3px 10px;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+
+  .article-body {
+    padding-top: 34px;
+  }
+</style>

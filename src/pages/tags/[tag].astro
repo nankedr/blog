@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostList from "../../components/PostList.astro";
+import { getTagSlug, getTags, sortPosts, type Post } from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = sortPosts(Object.values(import.meta.glob("../posts/*.md", { eager: true })) as Post[]);
+
+  return getTags(posts).map((tag) => ({
+    params: { tag: tag.slug },
+    props: {
+      tag: tag.name,
+      posts: posts.filter((post) =>
+        post.frontmatter.tags?.some((item) => getTagSlug(item) === tag.slug)
+      )
+    }
+  }));
+}
+
+type Props = {
+  tag: string;
+  posts: Post[];
+};
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`标签：${tag}`} description={`标签 ${tag} 下的文章。`}>
+  <section>
+    <p class="kicker">Tag</p>
+    <h1>{tag}</h1>
+    <p class="lead">共 {posts.length} 篇文章。</p>
+  </section>
+
+  <section>
+    <PostList posts={posts} />
+  </section>
+</BaseLayout>

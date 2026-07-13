@@ -1,0 +1,21 @@
+src/pages/tags/[tag].astro
+  s_1549314761b596::t_bfd6e51ea0f8a8 31,39-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "65ae51330af1ba368bb2b13380c94515eb07a9b9",
+  "prompts": {},
+  "sessions": {
+    "s_1549314761b596": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5ad8-3a5a-7871-afa3-b27880c47693",
+        "model": "unknown"
+      },
+      "human_author": "nankedr <lovezhaok@163.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}

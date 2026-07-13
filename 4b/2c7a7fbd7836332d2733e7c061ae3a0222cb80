@@ -1,0 +1,23 @@
+src/layouts/BaseLayout.astro
+  s_1549314761b596::t_14faaffb5ccc8b 7,12,27,33,57,61-62,69-72,75-77,96-105,113-118,128,151,162-163,185-188,205-206,218-222,226-249,305,308-314,325-328,338,341-345
+src/layouts/PostLayout.astro
+  s_1549314761b596::t_679c38ba522760 4,6-10,13,39-54,61-84,86-92,94,99-103,138-139,142-253
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "4b2c7a7fbd7836332d2733e7c061ae3a0222cb80",
+  "prompts": {},
+  "sessions": {
+    "s_1549314761b596": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f5ad8-3a5a-7871-afa3-b27880c47693",
+        "model": "unknown"
+      },
+      "human_author": "nankedr <lovezhaok@163.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}

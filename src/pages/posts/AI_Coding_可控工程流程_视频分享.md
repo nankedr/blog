@@ -6,7 +6,7 @@ pubDate: 2026-07-13
 tags: ["MattPocockSkill"]
 ---
 
-原视频：[YouTube / -QFHIoCo-Ko](https://www.youtube.com/watch?v=-QFHIoCo-Ko) · 讲者：Matt Pocock · 时长：约 96 分钟 · 整理日期：2026-07-10
+原视频：[YouTube / -QFHIoCo-Ko](https://www.youtube.com/watch?v=-QFHIoCo-Ko) · 讲者：Matt Pocock · 时长：约 96 分钟 · 发布日期：2026-04-24
 
 > **一句话结论**<br>这场 workshop 的重点不是找到一个神奇 prompt，而是为一个会受上下文影响、会遗忘、却能高速产出的执行者设计控制系统：先对齐，再外部化，再切片执行，最后用独立审查和反馈闭环收回质量责任。
 

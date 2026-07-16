@@ -1,0 +1,32 @@
+src/pages/posts/AI_Hero_21个工程师_Skills_详细解读.md
+  h_411098a6838779 1-514
+package-lock.json
+  s_8c82a047802933::t_caa99784413279 12-26,294-299,451-456,481-502,925-941,1439-1447,1862-2114,2126-2131,2153-2159,2168-2177,2425-2433,2503-3016,3021-3029,3105-3113,3147-3156,3346-3351,3400-3430,3537-3572,3818-3823,3847-3858,3882-3910,4134-4139,4171-4186,4288-4293,4325-4348,4506-4511,4583-4591,4787-4799
+package.json
+  s_8c82a047802933::t_fb99bfe259abfd 13-14
+src/layouts/PostLayout.astro
+  s_8c82a047802933::t_81acf96899262d 90-111,253-263
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "6f6a80c6c9db6bd3a97078bf2aed5d36cde16245",
+  "prompts": {},
+  "humans": {
+    "h_411098a6838779": {
+      "author": "nankedr <lovezhaok@163.com>"
+    }
+  },
+  "sessions": {
+    "s_8c82a047802933": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f6c0b-d396-76d1-9251-d2f424dab7b4",
+        "model": "unknown"
+      },
+      "human_author": "nankedr <lovezhaok@163.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
